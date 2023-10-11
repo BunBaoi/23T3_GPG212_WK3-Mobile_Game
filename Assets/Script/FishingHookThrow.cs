@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class FishingHookThrow : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class FishingHookThrow : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.isKinematic = true; // Start with Rigidbody deactivated
+        ResetButton();
     }
 
 
@@ -44,7 +46,7 @@ public class FishingHookThrow : MonoBehaviour
                 // Calculate the throwForce using the highest velocity attainted
                 throwForce = MaxVelocity * scaleFacotr;
 
-                //
+                // Reset maxVelocity for next throw
                 MaxVelocity = 0.0f;
 
                 // Print that the throw is starting and the calculated throw force
@@ -82,5 +84,12 @@ public class FishingHookThrow : MonoBehaviour
                 isThrowinging = false;
             }
         }
+    }
+
+    public void ResetButton()
+    {
+        rb.isKinematic = true;
+        transform.position = new Vector3(0.0f, 0.0f, 0.0f);
+
     }
 }
