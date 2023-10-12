@@ -13,6 +13,8 @@ public class FishingHookThrow : MonoBehaviour
     bool isThrowinging = false; // Flag to track if the player is currently throwing
     public float scaleFacotr = 10.0f; // Adjusting the value to control senstivity
 
+    bool grounded = false;
+
     public Text accelerometerText; // Reference to the Text component
     private Rigidbody rb; // Refence to the Rigidbody
 
@@ -21,7 +23,7 @@ public class FishingHookThrow : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.isKinematic = true; // Start with Rigidbody deactivated
-        ResetButton();
+        Reel();
     }
 
 
@@ -84,10 +86,22 @@ public class FishingHookThrow : MonoBehaviour
                 isThrowinging = false;
             }
         }
+
+        
+
     }
 
-    public void ResetButton()
+    public void OnTriggerEnter2D(Collider2D other)
     {
+        if (other.gameObject.CompareTag("Ocean"))
+        {
+            grounded = true;
+        }
+    }
+
+    public void Reel()
+    {
+        grounded = false;
         rb.isKinematic = true;
         transform.position = new Vector3(0.0f, 0.0f, 0.0f);
 
