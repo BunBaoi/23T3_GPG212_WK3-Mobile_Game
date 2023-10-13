@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class FishingHookThrow : MonoBehaviour
 {
@@ -10,8 +9,8 @@ public class FishingHookThrow : MonoBehaviour
     float throwForce = 0.0f; // The force to be applied to the ball
     float MaxVelocity = 0.0f; // The highest velocity attained during the throw
     bool isPreparingThrow = false; // Flag to rack if the player is preparing to throw
-    bool isThrowinging = false; // Flag to track if the player is currently throwing
-    public float scaleFacotr = 10.0f; // Adjusting the value to control senstivity
+    bool isThrowing = false; // Flag to track if the player is currently throwing
+    public float scaleFactor = 10.0f; // Adjusting the value to control senstivity
 
     bool grounded = false;
 
@@ -23,7 +22,7 @@ public class FishingHookThrow : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.isKinematic = true; // Start with Rigidbody deactivated
-        Reel();
+        
     }
 
 
@@ -43,10 +42,10 @@ public class FishingHookThrow : MonoBehaviour
 
         if (isPreparingThrow)
         {
-            if (Input.GetMouseButton(0)) // Player release to excute the throw
+            if (Input.GetMouseButtonUp(0)) // Player release to excute the throw
             {
                 // Calculate the throwForce using the highest velocity attainted
-                throwForce = MaxVelocity * scaleFacotr;
+                throwForce = MaxVelocity * scaleFactor;
 
                 // Reset maxVelocity for next throw
                 MaxVelocity = 0.0f;
@@ -57,10 +56,10 @@ public class FishingHookThrow : MonoBehaviour
 
                 // transition to the throwing state
                 isPreparingThrow = false;
-                isThrowinging = true;
+                isThrowing = true;
 
-                // Activate the rigidbody to apply force
                 rb.isKinematic = false;
+
             }
             else
             {
@@ -75,15 +74,21 @@ public class FishingHookThrow : MonoBehaviour
                 }
             }
 
-            if (isThrowinging)
+            if (isThrowing)
             {
                 // Apply the calculated throw force to the ball's Rigidbody
                 Rigidbody rb = GetComponent<Rigidbody>();
+
+
+
                 // rb.AddForce(transform.forward * throwForce, ForceMode.Impulse);
                 rb.AddForce(transform.forward * throwForce + Vector3.up * throwForce, ForceMode.Impulse);
 
+                // Activate the rigidbody to apply force
+               // rb.isKinematic = false;
+
                 // Reset the throwing state, you can add any lofic related to your game here
-                isThrowinging = false;
+                isThrowing = false;
             }
         }
 
@@ -96,11 +101,15 @@ public class FishingHookThrow : MonoBehaviour
         if (other.gameObject.CompareTag("Ocean"))
         {
             grounded = true;
+            randomfish();
+
+
         }
     }
 
-    public void Reel()
+    public void randomfish()
     {
+        Debug.Log("fishy");
         grounded = false;
         rb.isKinematic = true;
         transform.position = new Vector3(0.0f, 0.0f, 0.0f);
